@@ -1,0 +1,7 @@
+{
+  "name": "taskRxJSStandalone",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
