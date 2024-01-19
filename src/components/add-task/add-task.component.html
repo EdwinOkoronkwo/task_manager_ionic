@@ -1,0 +1,52 @@
+<div>
+  <h3>Add Task</h3>
+  <div>
+    <form [formGroup]="taskForm" (ngSubmit)="onAddTask()">
+      <div class="my-2">
+        <label for="">Title </label>
+        <input type="text" class="form-control" formControlName="title" />
+      </div>
+      <div class="my-2">
+        <label for="">Description </label>
+        <textarea class="form-control" formControlName="description"></textarea>
+      </div>
+      <div class="my-2">
+        <label for="">Task Date </label>
+        <input type="date" class="form-control" formControlName="task_date" />
+      </div>
+      <div class="my-2">
+        <label for="">Priority Level </label>
+        <select class="form-select" formControlName="priority_level">
+          <option value="">Select Priority Level</option>
+          <option [value]="pl" *ngFor="let pl of priority_level$ | async">
+            {{ pl }}
+          </option>
+        </select>
+      </div>
+      <div class="my-2">
+        <label for="">Progress Level </label>
+        <select class="form-select" formControlName="progress_level">
+          <option value="">Select Country</option>
+          <option [value]="prog" *ngFor="let prog of progress_level$ | async">
+            {{ prog }}
+          </option>
+        </select>
+      </div>
+      <div class="my-2">
+        <label for="">Category </label>
+        <select class="form-select" formControlName="categoryId">
+          <option value="">Select Category</option>
+          <option
+            [value]="category.id"
+            *ngFor="let category of categories$ | async"
+          >
+            {{ category.title }}
+          </option>
+        </select>
+      </div>
+      <div class="my-2">
+        <button type="submit" class="btn btn-primary">Add Task</button>
+      </div>
+    </form>
+  </div>
+</div>

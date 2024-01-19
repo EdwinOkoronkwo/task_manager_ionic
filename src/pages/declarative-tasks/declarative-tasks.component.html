@@ -1,0 +1,59 @@
+<div class="row" *ngIf="errorMessageAction$ | async as errorMessage">
+  <div class="col-md-12">
+    <div class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Tasks Data</h3>
+    <div class="row">
+      <div class="col-md-4">
+        <select class="form-select" (change)="onCategoryChange($event)">
+          <option value="">Select a Category</option>
+          <option
+            [value]="category.id"
+            *ngFor="let category of categories$ | async"
+          >
+            {{ category.title }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-8 text-end">
+        <a routerLink="/tab2" class="btn btn-primary">Add Task</a>
+      </div>
+    </div>
+    <table class="table" *ngIf="filteredTasks$ | async as tasks">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Category Name</th>
+          <th>Task Date</th>
+          <th>Priority Level</th>
+          <th>Progress Level</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td>{{ task.id }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.categoryName }}</td>
+          <td>{{ task.task_date | date : "longDate" }}</td>
+          <td>{{ task.priority_level }}</td>
+          <td>{{ task.progress_level }}</td>
+          <td>
+            <a [routerLink]="['/tab3', task.id]" class="btn btn-info"
+              >Update Task</a
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,54 +1,60 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
-import { DeclarativeTaskService } from '../../services/declarative-task.service';
-import { DeclarativeCategoryService } from '../../services/declarative-category.service';
+import { DeclarativeTaskService } from '../../../services/declarative-task.service';
+import { DeclarativeCategoryService } from '../../../services/declarative-category.service';
 import { EMPTY, combineLatest } from 'rxjs';
-import { NotificationService } from '../../services/notification.service';
+import { NotificationService } from '../../../services/notification.service';
+import { GlobalService } from 'src/services/global.service';
 import {
+  IonButton,
+  IonDatetime,
   IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
+  IonIcon,
+  IonInput,
+  IonLabel,
   IonList,
-  IonItem,
-  IonText,
   IonSelect,
   IonSelectOption,
-  IonLabel,
-  IonButton,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  IonItem,
 } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-import { GlobalService } from 'src/services/global.service';
+import { IonTextarea } from '@ionic/angular';
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss'],
+  selector: 'app-task-form',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './task-form.component.html',
+  styleUrl: './task-form.component.css',
   imports: [
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonContent,
-    ExploreContainerComponent,
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
     IonList,
-    IonItem,
+    IonInput,
+    IonIcon,
     IonText,
+    IonDatetime,
     IonSelect,
     IonSelectOption,
-    IonLabel,
     IonButton,
+    IonLabel,
+    IonItem,
+    CommonModule,
+    ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tab3Page {
+export class TaskFormComponent {
   isLoading = false;
+  @Input() from: any;
+  // isSubmitted = false;
+  // priority_level = new Set(['Low', 'Medium', 'High']);
+  // progress_level = new Set(['Pending', 'Started', 'Completed']);
   taskId!: number;
   priority_level$ = this.taskService.priority_level$;
   progress_level$ = this.taskService.progress_level$;
@@ -85,8 +91,7 @@ export class Tab3Page {
         });
     }),
     catchError((error) => {
-      this.global.errorToast(error);
-      //this.notificationService.setErrorMessage(error);
+      this.notificationService.setErrorMessage(error);
       return EMPTY;
     })
   );
@@ -113,6 +118,16 @@ export class Tab3Page {
     private global: GlobalService
   ) {}
 
+  // onTaskSubmit() {
+  //   let taskDetails = this.taskForm.value;
+  //   if (this.taskId) {
+  //     taskDetails = { ...taskDetails, id: this.taskId };
+  //     this.taskService.updateTask(taskDetails);
+  //   } else {
+  //     this.taskService.addTask(taskDetails);
+  //   }
+  // }
+
   onTaskSubmit() {
     this.isLoading = true;
     this.global.showLoader();
@@ -124,6 +139,7 @@ export class Tab3Page {
       this.global.hideLoader();
       this.router.navigateByUrl('/tabs/tab1');
       this.global.successToast('Task was updated successfully!');
+      this.global.modalDismiss();
     } else {
       this.taskService.addTask(taskDetails);
       this.global.successToast('Task was added successfully!');

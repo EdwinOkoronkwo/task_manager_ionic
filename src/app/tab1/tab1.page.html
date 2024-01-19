@@ -1,17 +1,143 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+  <ion-toolbar color="primary">
+    <ion-title> Task Data </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="row" *ngIf="errorMessageAction$ | async as errorMessage">
+    <div class="col-md-12">
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    </div>
+  </div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="row">
+    <div class="select-button">
+      <div class="select">
+        <select
+          class="custom-select"
+          style="width: 200px"
+          (change)="onCategoryChange($event)"
+        >
+          <option value="">Select a Category</option>
+          <option
+            [value]="category.id"
+            *ngFor="let category of categories$ | async"
+          >
+            {{ category.title }}
+          </option>
+        </select>
+      </div>
+      <div size="4">
+        <ion-button color="secondary">
+          <a routerLink="/tabs/tab3"
+            ><ion-text color="white"> Add Task </ion-text></a
+          >
+        </ion-button>
+      </div>
+      <div size="4">
+        <ion-button color="success" (click)="modalAdd()">
+          <ion-text color="white"> Add </ion-text>
+        </ion-button>
+      </div>
+    </div>
+
+    <ion-grid *ngIf="filteredTasks$ | async as tasks">
+      <ion-title>
+        <ion-row>
+          <ion-col size="2">Title</ion-col>
+          <ion-col size="3">Description</ion-col>
+          <ion-col>Category Name</ion-col>
+          <ion-col>Task Date</ion-col>
+          <ion-col>Priority Level</ion-col>
+          <ion-col>Progress Level</ion-col>
+          <ion-col size="3">Actions</ion-col>
+        </ion-row>
+      </ion-title>
+
+      <ion-row *ngFor="let task of tasks">
+        <ion-col size="2">{{ task.title }}</ion-col>
+        <ion-col size="3">{{ task.description }}</ion-col>
+        <ion-col>{{ task.categoryName }}</ion-col>
+        <ion-col>{{ task.task_date | date : "longDate" }}</ion-col>
+        <ion-col>{{ task.priority_level }}</ion-col>
+        <ion-col>{{ task.progress_level }}</ion-col>
+        <ion-col size="3">
+          <ion-button color="warning">
+            <a [routerLink]="['/tabs/tabs3/edit-task', task.id]">Update</a>
+          </ion-button>
+          <ion-button color="primary" (click)="onDeleteTask(task)">
+            Delete
+          </ion-button></ion-col
+        >
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
+
+<!-- <ion-grid>
+  <ion-row>
+    <ion-col size="12">
+      <ion-title><h3>Tasks Data</h3></ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item color="light" class="ion-margin-bottom">
+        <ion-label color="medium" position="floating"> </ion-label>
+        <ion-select
+          label="Select a Category"
+          required
+          placeholder="Category"
+          (change)="onCategoryChange($event)"
+        >
+          <ion-select-option
+            *ngFor="let category of categories$ | async"
+            [value]="category.id"
+            >{{ category.title }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button color="info">
+        <a routerLink="/tabs/add-task">Add Task</a>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid> -->
+
+<!-- <table class="table" *ngIf="filteredTasks$ | async as tasks">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Category Name</th>
+          <th>Task Date</th>
+          <th>Priority Level</th>
+          <th>Progress Level</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.categoryName }}</td>
+          <td>{{ task.task_date | date : "longDate" }}</td>
+          <td>{{ task.priority_level }}</td>
+          <td>{{ task.progress_level }}</td>
+
+          <td>
+            <a
+              [routerLink]="['/tabs/edit-task', task.id]"
+              class="btn btn-primary"
+              >Update Task</a
+            >
+            <button class="btn btn-danger" (click)="onDeleteTask(task)">
+              Delete Task
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->

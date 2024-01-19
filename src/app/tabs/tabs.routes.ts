@@ -22,6 +22,16 @@ export const routes: Routes = [
           import('../tab3/tab3.page').then((m) => m.Tab3Page),
       },
       {
+        path: 'add-task',
+        loadComponent: () =>
+          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+      },
+      {
+        path: 'edit-task/:id',
+        loadComponent: () =>
+          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full',
